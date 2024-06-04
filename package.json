@@ -1,0 +1,16 @@
+{
+  "name": "mystore-dbms-app",
+  "version": "1.0.0",
+  "description": "This is a dbms course app made in express ",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nikhil",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mysql": "^2.18.1"
+  }
+}
