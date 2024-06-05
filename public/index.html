@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Store</title>
+    <link rel="stylesheet" href="/styles/index-style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>My OnlineStore</h1>
+      <div class="options">
+        <a href="#" class="option" id="loginAdmin">Admin-View</a>
+        <a href="#" class="option" id="loginCustomer">Customer-View</a>
+      </div>
+    </div>
+
+    <script>
+      const element1 = document.querySelector("#loginAdmin");
+      if (element1) {
+        element1.addEventListener("click", function (event) {
+          event.preventDefault();
+          window.location.href = "admin-view.html";
+        });
+      }
+
+      const element2 = document.querySelector("#loginCustomer");
+      if (element2) {
+        element2.addEventListener("click", function (event) {
+          event.preventDefault();
+          window.location.href = "customer-view.html";
+        });
+      }
+    </script>
+  </body>
+</html>
