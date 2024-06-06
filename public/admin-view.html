@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin-View</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f7f7f7;
+      }
+
+      .container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        margin-top: 0;
+        color: #333;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+      }
+
+      label {
+        margin-bottom: 10px;
+        color: #555;
+      }
+
+      input[type="text"],
+      input[type="password"] {
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+
+      input[type="submit"] {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 120px;
+        align-self: flex-start;
+        /* Align to the start of the flex container */
+      }
+
+      input[type="submit"]:hover {
+        background-color: #0056b3;
+      }
+
+      #invalid {
+        color: red;
+        text-align: center;
+        display: none;
+      }
+
+      #back {
+        background-color: #dc3545;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 20%;
+        margin-top: 20px;
+        margin-left: 40%;
+      }
+
+      #back:hover {
+        background-color: #c82333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Login as Admin</h1>
+      <form id="login-form" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required autocomplete="off" />
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required />
+        <input type="submit" value="Login" id="submit-form" />
+      </form>
+    </div>
+    <button id="back">Go Back</button>
+    <script>
+      async function submitForm(obj) {
+        let data = await fetch("/admin-login-request", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(obj),
+        });
+        if(data.status===200){
+            return true;
+        }
+        else{
+            return false;
+        }
+      }
+      
+      const goBack = document.getElementById("back");
+      goBack.addEventListener("click", () => {
+        window.location.href = "/index.html";
+      });
+
+      const formSubmitted = document.getElementById("login-form");
+      formSubmitted.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        let obj = {};
+        let name = document.getElementById("name").value;
+        let password = document.getElementById("password").value;
+        obj["name"] = name;
+        obj["password"] = password;
+        console.log(obj);
+        let result = await submitForm(obj);
+        console.log(result);
+        if(result===true){
+            //change content
+            window.location.href="/admin.html"
+        }
+        else{
+            alert("Invalid Credentials!!!!!");
+            formSubmitted.reset();
+        }
+      });
+    </script>
+  </body>
+</html>
