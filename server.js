@@ -115,3 +115,83 @@ app.post("/admin-option3", (req, res) => {
   });
   console.log("Admin option 3 done");
 });
+
+
+
+
+
+app.post("/customer-sign-in", (req, res) => {
+  console.log("Customer Login request.....");
+
+  //preform validation of data
+  let email = req.body.email;
+  let password = req.body.password;
+  console.log(email);
+  console.log(password);
+  let isValid = false;
+  mydb.query(`Select * from Customer where email_ID="${email}" and password = "${password}"`, (err, data) => {
+    if (err) {
+      console.log("Invalid Data");
+    } else {
+      if(data.length >=1){
+        isValid = true;
+        res.status(200).json({ success: true, message: "Login Success" });
+      }
+    }
+    if (isValid === false) {
+      res.status(401).json({ success: false, message: "Login Failed" });
+    }
+  });
+});
+
+
+
+
+app.post("/sign-up-customer", (req, res) => {
+  console.log("Customer Sign Up request...");
+  const email = req.body.email;
+  const password = req.body.password;
+  const first_name = req.body.first_name;
+  const middle_name = req.body.middle_name;
+  const last_name = req.body.last_name;
+  const date_of_birth = req.body.date_of_birth;
+  const age = parseInt(req.body.age);
+  const house_number =parseInt( req.body.house_number);
+  const street_name = req.body.street_name;
+  const city = req.body.city;
+  const pincode = parseInt(req.body.pincode);
+  const state = req.body.state;
+  let flag = false;
+  let userID=null;
+  mydb.query("select * from customer ", (err, data) => {
+    if (err) {
+      console.log("Error has Occureed during the Database Connection!!!!!!");
+    } else {
+      for (let i = 0; i < data.length; i++) {
+        const row = data[i];
+        if (row.email_ID === email && row.password === password) {
+          console.log("Present Already ");
+          res.status(401).json({ success: false, message: "Already Exists" });
+          flag = true;
+          break;
+        }
+      }
+      if (flag === false) {
+        userID=data[data.length-1].userID;
+        console.log("valid h");
+        const sqlQuery = "INSERT INTO CUSTOMER VALUES (1, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        const values = [userID+1,password,first_name,middle_name,last_name,email,userID+1,date_of_birth,age,house_number,street_name,city,pincode,state];
+        mydb.query(sqlQuery,values,(err,result)=>{
+          if(err){
+            console.log(err);
+            res.status(401).json({ success: false, message: "Already Exists" });
+          }
+          else{
+            console.log("done insertion");
+            res.status(200).json({ success: false, message: "New Customer" });
+          }
+        });
+      }
+    }
+  });
+});
