@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customer Registration Form</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f0f0;
+      }
+      .container {
+        width: 80%;
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      .form-group label {
+        display: block;
+        font-weight: bold;
+      }
+      .form-group input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+      }
+      .form-group select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+      }
+      .form-group button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .form-group button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Register As A New Customer</h2>
+      <form id="customer-form">
+        <div class="form-group">
+          <label for="email_ID">Email:</label>
+          <input type="text" id="email_ID" name="email_ID" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+        <div class="form-group">
+          <label for="first_name">First Name:</label>
+          <input type="text" id="first_name" name="first_name" required />
+        </div>
+        <div class="form-group">
+          <label for="middle_name">Middle Name:</label>
+          <input type="text" id="middle_name" name="middle_name" />
+        </div>
+        <div class="form-group">
+          <label for="last_name">Last Name:</label>
+          <input type="text" id="last_name" name="last_name" required />
+        </div>
+        <div class="form-group">
+          <label for="date_of_birth">Date of Birth:</label>
+          <input type="date" id="date_of_birth" name="date_of_birth" required />
+        </div>
+        <div class="form-group">
+          <label for="age">Age:</label>
+          <input type="number" id="age" name="age" required />
+        </div>
+        <div class="form-group">
+          <label for="house_number">House Number:</label>
+          <input type="text" id="house_number" name="house_number" required />
+        </div>
+        <div class="form-group">
+          <label for="street_name">Street Name:</label>
+          <input type="text" id="street_name" name="street_name" required />
+        </div>
+        <div class="form-group">
+          <label for="city">City:</label>
+          <input type="text" id="city" name="city" required />
+        </div>
+        <div class="form-group">
+          <label for="pincode">Pincode:</label>
+          <input type="text" id="pincode" name="pincode" required />
+        </div>
+        <div class="form-group">
+          <label for="state">State:</label>
+          <input type="text" id="state" name="state" required />
+        </div>
+        <div class="form-group">
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      document
+        .getElementById("customer-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const email = document.getElementById("email_ID").value;
+          const password = document.getElementById("password").value;
+          const firstName = document.getElementById("first_name").value;
+          const middleName = document.getElementById("middle_name").value;
+          const lastName = document.getElementById("last_name").value;
+          const dateOfBirth = document.getElementById("date_of_birth").value;
+          const age = document.getElementById("age").value;
+          const houseNumber = document.getElementById("house_number").value;
+          const streetName = document.getElementById("street_name").value;
+          const city = document.getElementById("city").value;
+          const pincode = document.getElementById("pincode").value;
+          const state = document.getElementById("state").value;
+
+          const formData = {
+            email: email,
+            password: password,
+            first_name: firstName,
+            middle_name: middleName,
+            last_name: lastName,
+            date_of_birth: dateOfBirth,
+            age: age,
+            house_number: houseNumber,
+            street_name: streetName,
+            city: city,
+            pincode: pincode,
+            state: state,
+          };
+
+          fetch("/sign-up-customer", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                errorInResponse();
+                return null;
+              }
+              return response.json();
+            })
+            .then((data) => {
+              if (data === null) {
+                document.getElementById("customer-form").reset();
+              } else {
+                alert("Successfully Registered.....");
+                window.location.href="index.html";
+              }
+            })
+            .catch((error) => {
+              errorInResponse();
+            });
+        });
+
+      function errorInResponse() {
+        alert("Customer Already Exists with same Email ID or Input format is wrong!!!!!");
+      }
+    </script>
+  </body>
+</html>
