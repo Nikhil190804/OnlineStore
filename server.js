@@ -135,7 +135,7 @@ app.post("/customer-sign-in", (req, res) => {
     } else {
       if(data.length >=1){
         isValid = true;
-        res.status(200).json({ success: true, message: "Login Success" });
+        res.status(200).json({ success: true, message: "Login Success" ,id:`${data[0].userID}`,name:`${data[0].first_name}`});
       }
     }
     if (isValid === false) {
@@ -194,4 +194,66 @@ app.post("/sign-up-customer", (req, res) => {
       }
     }
   });
+});
+
+
+
+app.post("/product-info", (req, res) => {
+
+  mydb.query("SELECT * FROM Product", (err, data) => {
+    if (err) {
+      console.log("Error has Occureed during the Database Connection!!!!!!");
+      res.status(400);
+    } else {
+      let json_data = JSON.stringify(data);
+      res.status(200).send(json_data);
+    }
+  });
+  console.log("Product INFO done");
+});
+
+
+
+app.post("/product-order", (req, res) => {
+
+  mydb.query("Select Max(orderID) from orders;", (err, data) => {
+    if (err) {
+      console.log("Error has Occureed during the Database Connection!!!!!!");
+      res.status(400);
+    } else {
+      //let json_data = JSON.parse(data);
+      let json_data = JSON.stringify(data);
+      console.log(json_data);
+      
+      let len = json_data.length; 
+      
+      let d=json_data.substring(17,len-2);
+      let max_order_id = parseInt(d)+1;
+
+      console.log(max_order_id);
+      console.log(req.body.customer_id);
+      mydb.query(`INSERT INTO Orders Values (${max_order_id},${req.body.customer_id},4,'order_address','order_address',1200,'order_address',${req.body.price*req.body.quantity},NOW()) `, (err,data)=>{
+        if(err){
+          console.log("Error has Occureed during the Database Connection!!!!!!");
+          res.status(400);
+        }
+        else{
+          mydb.query(`INSERT INTO Order_has_products Values (${max_order_id},${req.body.product_id},${req.body.quantity});` , (err,data)=>{
+            
+            if(err){
+              console.log("Error has Occureed during the Database Connection!!!!!!");
+              res.status(400);
+            }
+            else{
+              console.log("done h");
+              res.status(200).send("bye");
+            }
+          })
+        }
+      })
+
+      
+    }
+  });
+  console.log("Product order done");
 });
