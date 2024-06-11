@@ -4,89 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-      }
-
-      #customer-id {
-        display: none;
-      }
-      .navbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 20px;
-        background-color: #333;
-        color: white;
-      }
-      .navbar .left {
-        font-size: 18px;
-      }
-      .navbar .right a {
-        color: white;
-        text-decoration: none;
-        margin: 0 10px;
-      }
-      .navbar .right button {
-        background-color: #555;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        cursor: pointer;
-      }
-      .navbar .right button:hover {
-        background-color: #777;
-      }
-      .products {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        padding: 20px;
-      }
-      .card {
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        margin: 10px;
-        width: 300px;
-        padding: 20px;
-        text-align: center;
-      }
-      .card img {
-        max-width: 100%;
-        height: auto;
-      }
-      .card input[type="number"] {
-        width: 50px;
-        margin: 10px 0;
-      }
-      .card button {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        padding: 10px;
-        cursor: pointer;
-      }
-      .card button:hover {
-        background-color: #0056b3;
-      }
-      @media (max-width: 768px) {
-        .navbar {
-          flex-direction: column;
-          align-items: flex-start;
-        }
-        .navbar .right {
-          margin-top: 10px;
-        }
-        .products {
-          flex-direction: column;
-          align-items: center;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="/styles/customer-login.css" />
   </head>
   <body>
     <div class="navbar" id="navbar-top">
@@ -96,79 +14,25 @@
         <a href="#navbar-top">Home</a>
         <a href="#prod">Products</a>
         <a href="#">Coupons</a>
-        <button>Logout</button>
+        <button id="logout-btn">Logout</button>
       </div>
     </div>
+    <h2 id="product-heading">Our Products</h2>
     <div class="products" id="prod"></div>
-    <script>
-      async function handle(btn, productID, price) {
-        console.log("hgtfrde");
-        alert("clicked");
-        console.log(btn.previousElementSibling);
-        let element = btn.previousElementSibling;
-        let prod_quantity = element.value;
-        console.log(element.value);
-        let customer_id = document.getElementById("customer-id").textContent;
-        console.log(customer_id);
-        let obj = {
-          product_id: productID,
-          price: price,
-          customer_id: customer_id,
-          quantity: prod_quantity,
-        };
-        try {
-          let response = await fetch("/product-order", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(obj),
-          });
-          console.log(response.status);
-          if (response.status == 200) {
-            alert("Successfully ordered.....");
-          } else {
-            alert("Failed to order!!!!!");
-          }
-        } catch (err) {
-          alert("Failed to order!!!!!");
-          console.log(err);
-        }
-      }
-      const urlParams = new URLSearchParams(window.location.search);
-      const id = urlParams.get("id");
-      const name = urlParams.get("name");
-
-      document.getElementById("customer-name").innerHTML = name;
-      document.getElementById("customer-id").innerHTML = id;
-      document.addEventListener("DOMContentLoaded", async () => {
-        let response = await fetch("/product-info", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: "",
-        });
-        let data = await response.json();
-        const productsContainer = document.getElementById("prod");
-
-        data.forEach((product) => {
-          const productCard = document.createElement("div");
-          productCard.className = "card";
-          productCard.innerHTML = `
-                <img src="https://via.placeholder.com/150" alt="Product Image">
-                <h3>Product ID: ${product.productID}</h3>
-                <h2>${product.name}</h2>
-                <p>${product.description}</p>
-                <p>Price: $${product.price}</p>
-                <input type="number" min="1" max="3" value="1">
-                <button onclick = "handle(this,${product.productID},${product.price})">Order Now</button>
-            `;
-          productsContainer.appendChild(productCard);
-        });
-
-        console.log(data);
-      });
+    <div id="orderModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Order Confirmation</h2>
+        <p> Product ID: <span id="modalProductId"></span> </p>
+        <p> Product Name: <span id="modalProductName"></span> </p>
+        <p> Product Description: <span id="modalProductDescription"></span> </p>
+        <p> Product Price: <span id="modalProductPrice"></span> </p>
+        <p>Quantity: <span id="modalProductQuantity"></span></p>
+        <button onclick="confirmOrder()">Order Now</button>
+      </div>
+    </div>
+    <script src="../scripts/customer-login.js">
+      
     </script>
   </body>
 </html>

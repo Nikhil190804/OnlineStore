@@ -15,7 +15,7 @@ mydb.query("use nnv;");
 
 app.use(express.static("public"));
 app.use("/styles", express.static("styles"));
-
+app.use("/scripts", express.static("scripts"));
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -219,6 +219,7 @@ app.post("/product-order", (req, res) => {
   mydb.query("Select Max(orderID) from orders;", (err, data) => {
     if (err) {
       console.log("Error has Occureed during the Database Connection!!!!!!");
+      console.log(err);
       res.status(400);
     } else {
       //let json_data = JSON.parse(data);
@@ -229,18 +230,25 @@ app.post("/product-order", (req, res) => {
       
       let d=json_data.substring(17,len-2);
       let max_order_id = parseInt(d)+1;
+      let custid = parseInt(req.body.customer_id);
+      console.log(req.body.price,req.body.quantity);
+      let price = parseInt(req.body.price);
+      let quantity = parseInt(req.body.quantity);
+      let prod_id = parseInt(req.body.product_id);
 
       console.log(max_order_id);
       console.log(req.body.customer_id);
-      mydb.query(`INSERT INTO Orders Values (${max_order_id},${req.body.customer_id},4,'order_address','order_address',1200,'order_address',${req.body.price*req.body.quantity},NOW()) `, (err,data)=>{
+      mydb.query(`INSERT INTO Orders Values (${max_order_id},${custid},4,'order_address','order_address',1200,'order_address',${price*quantity},NOW()) `, (err,data)=>{
         if(err){
           console.log("Error has Occureed during the Database Connection!!!!!!");
+          console.log(err);
           res.status(400);
         }
         else{
-          mydb.query(`INSERT INTO Order_has_products Values (${max_order_id},${req.body.product_id},${req.body.quantity});` , (err,data)=>{
+          mydb.query(`INSERT INTO Order_has_products Values (${max_order_id},${prod_id},${quantity});` , (err,data)=>{
             
             if(err){
+              console.log(err);
               console.log("Error has Occureed during the Database Connection!!!!!!");
               res.status(400);
             }
